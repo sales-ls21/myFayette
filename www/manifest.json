@@ -1,0 +1,7 @@
+
+{
+  "name": "GoLocal! Fayette",
+  "short_name": "GoLocal!",
+  "start_url": "index.html",
+  "display": "standalone"
+}
