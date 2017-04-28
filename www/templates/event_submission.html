@@ -1,5 +1,65 @@
-<ion-view view-title="Home">
+<ion-view view-title="Calendar Submission">
 <ion-content>
-<h1>Submit an Event to the GoLocal! Calendar</h1>
+<h1>Want to add your event here?</h1>
+<h2>Submit an Event to the GoLocal! Calendar</h2>
+<p>
+
+It's completely free to submit an event to the calendar and submissions are loaded in realtime. There are a few rules, though:<br>
+
+<ion-item-group>
+	<li>You have to be a registered GoLocal! -Fayette user. Please <a href="/login">Login</a> or <a href="/signup">Sign Up</a> before attempting to submit an event.</li>
+	<li>You are limited one (1) event per month and four (4) per calendar year.</li>
+	<li>Your submission MUST not include any inappropriate, profane, abusive, or otherwise unacceptable language or links to inappropriate material. </li>
+</ion-item-group><br>
+
+Violators of these rules will have their submissions removed and may have their accounts blocked.<br>
+
+GoLocal! reserves the right to edit or remove any submission at its sole discretion.
+</p>
+<h3>Sound good? Then tell us "what's going on around here!"</h3>
+
+ <form ng-submit="sendEvent()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Event Title</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Hosted By?</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Location</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Cost per Person</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Age Minimum</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Short Description</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Social Media Link?</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Contact for more info</span>
+          <input type="text" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Start Time</span>
+          <input type="time" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">End Time</span>
+          <input type="time" ng-model="">
+        </label>  <label class="item item-input">
+          <span class="input-label">Date</span>
+          <input type="date" ng-model="">
+        </label> 
+        <label class="item">
+          <button class="button button-block button-positive" ng-click="sendEvent()">Add Your Event to the Calendar</button>
+        </label>
+      </div>
+  </form>
+
 </ion-content>
+
 </ion-view>

@@ -49,6 +49,15 @@ angular.module('golocal', ['ionic', 'golocal.controllers'])
           controller: "AccountCtrl"
         }
       }
+    }) 
+  .state('app.map', {
+      url: '/map',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/map.html',
+          controller: "MapCtrl"
+        }
+      }
     })
     .state('app.home', {
       url: '/home',

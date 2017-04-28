@@ -39,6 +39,26 @@ angular.module('golocal.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
+
+  $scope.signupData = {};
+
+  $ionicModal.fromTemplateUrl('templates/signup.html', {
+    scope: $scope
+  }).then(function(modal){
+    $scope.signupModal = modal;
+  });
+
+    $scope.closeSignUp = function() {
+    $scope.signupModal.hide();
+  };
+
+  $scope.register = function(){
+    $scope.signupModal.show();
+  }
+
+  $scope.signup = function(){
+    
+  }
 })
 
 .controller('HomeCtrl', function($scope) {
@@ -65,4 +85,6 @@ angular.module('golocal.controllers', [])
 .controller('AboutCtrl', function($scope, $stateParams) {
 })
 .controller('AdvertiseCtrl', function($scope, $stateParams) {
+})
+.controller('MapCtrl', function($scope, $stateParams) {
 });
