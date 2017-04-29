@@ -62,7 +62,8 @@ angular.module('golocal.controllers', [])
 })
 .factory('Category', function($http){
     var category = {
-      list: []
+      list: [],
+      companies: []
     };
 
 
@@ -76,14 +77,24 @@ angular.module('golocal.controllers', [])
     }
 
     category.getCompanyByCategory = function(params){
-      console.log(params);
       return $http({
         method: 'GET',
-        url: "https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy='category'&equalTo='${params}'"
+        url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="category"&equalTo="${params}"`
       }).success(function(data){
-        console.log(data);
+        category.companies = data;
       });
     }
+
+    category.getCompanyByName = function(params){
+      return $http({
+        method: 'GET',
+        url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="name"&equalTo="${params}"`
+      }).success(function(obj){
+        category.companies = obj;
+      });
+    }
+
+
   return category;
 })
 
@@ -98,10 +109,21 @@ angular.module('golocal.controllers', [])
 
 })
 .controller('DetailsCtrl', function($scope, $stateParams, Category) {
-    Category.getCompanyByCategory($stateParams.category);
-    // .then(function(data){
-    //   $scope.companies = data;
-    // })
+    $scope.title = $stateParams.category;
+    Category.getCompanyByCategory($stateParams.category)
+    .then(function(obj){
+      $scope.companies = obj.data;
+    });
+})
+.controller('CompaniesCtrl', function($scope, $stateParams, Category) {
+  $scope.title = $stateParams.company;
+  Category.getCompanyByName($stateParams.company)
+  .then(function(obj){
+    for (var prop in obj.data){
+    $scope.company = obj.data[prop];
+    }
+  });
+
 })
 .controller('AccountCtrl', function($scope, $stateParams) {
 })

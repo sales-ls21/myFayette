@@ -114,6 +114,15 @@ angular.module('golocal', ['ionic', 'golocal.controllers'])
       }
     } 
   })
+    .state('app.specifics', {
+    url: '/:company',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/company_details.html',
+        controller: 'CompaniesCtrl'
+      }
+    }
+  })
     .state('app.details', {
     url: '/:category/details',
     views: {
@@ -122,9 +131,8 @@ angular.module('golocal', ['ionic', 'golocal.controllers'])
         controller: 'DetailsCtrl'
       }
     }
-  })
+  })  
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');
 })
-
 ;

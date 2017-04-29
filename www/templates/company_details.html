@@ -1,0 +1,30 @@
+  <ion-view view-title="More Information About {{company.name}}">
+  <ion-content padding="true" class=" manual-remove-top-padding has-header">
+    <div class="list card" id="companyDetails-card22">
+      <ion-item class="item-avatar dark" id="companyDetails-list-item26">
+        <h2dark>{{company.name}}</h2dark>
+      </ion-item>
+      <div style="margin: 0px; line-height: 250px; background-color: rgb(232, 235, 239); text-align: center;">
+        <img src= "{{company.logo}}"class="icon ion-image" style="font-size: 64px; color: rgb(136, 136, 136); vertical-align: middle;">
+      </div>
+      <div class="item item-body" id="companyDetails-list-item-container4">
+        <div id="companyDetails-markdown7" style="text-align:center;" class="show-list-numbers-and-dots">
+          <p style="margin-top:0px;color:#000000;">{{company.slogan}}</p>
+        </div>
+      </div>
+      <ion-item class="item-icon-left dark" id="companyDetails-list-item27">
+        <i class="icon ion-ios-location"></i>{{company.address}} | {{company.city}}</ion-item>
+      <ion-item class="item-icon-left dark" id="companyDetails-list-item28" href="{{company.phone}}">
+        <i class="icon ion-ios-telephone"></i>{{company.phone}}</ion-item>
+      <ion-item class="item-icon-left dark" id="companyDetails-list-item29" href="mailto:{{company.email}}">
+        <i class="icon ion-ios-email"></i>{{company.email}}</ion-item>
+    </div>
+    <div id="companyDetails-button-bar1" class="button-bar">
+      <a href-inappbrowser="{{company.facebook}}" id="companyDetails-button5" class="button button-positive  button-block icon ion-social-facebook"> Facebook</a>
+      <a href-inappbrowser="{{company.twitter}}" id="companyDetails-button6" class="button button-calm  button-block icon ion-social-twitter"> Twitter</a>
+      <a href-inappbrowser="{{company.website}}"id="companyDetails-button7" class="button button-assertive  button-block icon ion-wifi"> Website</a>
+      <a href-inappbrowser="googlemaps" id="companyDetails-button8" class="button button-dark  button-block icon ion-navigate"> Get Directions</a>
+    </div>
+    <button id="companyDetails-button12" class="button button-assertive  button-block icon ion-heart"> Add to Favorites</button>
+  </ion-content>
+  </ion-view>
