@@ -112,8 +112,19 @@ angular.module('golocal', ['ionic', 'golocal.controllers'])
         templateUrl: 'templates/listings.html',
         controller: 'ListingCtrl'
       }
+    } 
+  })
+    .state('app.details', {
+    url: '/:category/details',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/category_details.html',
+        controller: 'DetailsCtrl'
+      }
     }
-  });
+  })
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');
-});
+})
+
+;

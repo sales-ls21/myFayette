@@ -57,22 +57,51 @@ angular.module('golocal.controllers', [])
   }
 
   $scope.signup = function(){
-    
+
   }
+})
+.factory('Category', function($http){
+    var category = {
+      list: []
+    };
+
+
+    category.getAll = function(){
+      return $http({
+        method: 'GET',
+        url: "https://myfayettecounty-c7877.firebaseio.com/categories.json"
+      }).success(function(data){
+        category.list = data;
+      });
+    }
+
+    category.getCompanyByCategory = function(params){
+      console.log(params);
+      return $http({
+        method: 'GET',
+        url: "https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy='category'&equalTo='${params}'"
+      }).success(function(data){
+        console.log(data);
+      });
+    }
+  return category;
 })
 
 .controller('HomeCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+ 
 })
 
-.controller('ListingCtrl', function($scope, $stateParams) {
+.controller('ListingCtrl', function($scope, Category) {
+    Category.getAll().then(function(data){
+      $scope.categories = Category.list;
+    });
+
+})
+.controller('DetailsCtrl', function($scope, $stateParams, Category) {
+    Category.getCompanyByCategory($stateParams.category);
+    // .then(function(data){
+    //   $scope.companies = data;
+    // })
 })
 .controller('AccountCtrl', function($scope, $stateParams) {
 })

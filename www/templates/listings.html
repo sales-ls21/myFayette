@@ -1,8 +1,7 @@
 <ion-view view-title="Business Listings">
 	<ion-content>
-	  <ion-item-group>
-	    <ion-item>Angola</ion-item>
-	    <ion-item>Argentina</ion-item>
+	  <ion-item-group ng-repeat = "category in categories">
+	    <ion-item href="#/app/{{category.name}}/details">{{category.name}}</ion-item>
 	  </ion-item-group>
 	</ion-content>
 </ion-view>
