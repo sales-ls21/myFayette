@@ -181,9 +181,12 @@ angular.module('golocal.controllers', [])
       }
     };
   event.getAll().then(function(obj){
-    obj.data.forEach(function(i){
-      $scope.eventSources[0].events.push(i); 
-    })
+    for(prop in obj.data){
+      $scope.eventSources[0].events.push(obj.data[prop])
+    }
+    // obj.data.forEach(function(i){
+    //   $scope.eventSources[0].events.push(i); 
+    // })
   });
 })
 .controller('SubmissionCtrl', function($scope, $stateParams, event, $location) {
@@ -206,15 +209,15 @@ angular.module('golocal.controllers', [])
 
 //FUNCTION WORKS: NEED TO DEBUG RETRIEVE FUNCTION ON CALENDAR PAGE//
 
-  // $scope.submit = function(){
-  //   $scope.eventObj.start = $scope.eventObj.date + "T" + $scope.eventObj.start
-  //   $scope.eventObj.end = $scope.eventObj.date + "T" + $scope.eventObj.end
-  //   event.addEvent($scope.eventObj)
-  //   .then(function(obj){
-  //     alert("event added");
-  //     window.location.href("#/app/events")
-  //   })
-  // }
+  $scope.submit = function(){
+    $scope.eventObj.start = $scope.eventObj.date + "T" + $scope.eventObj.start
+    $scope.eventObj.end = $scope.eventObj.date + "T" + $scope.eventObj.end
+    event.addEvent($scope.eventObj)
+    .then(function(obj){
+      alert("event added");
+      window.location.replace("#/app/events")
+    })
+  }
 
 })
 .controller('AboutCtrl', function($scope, $stateParams) {
