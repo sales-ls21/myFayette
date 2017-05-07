@@ -1,0 +1,16 @@
+<ion-modal-view ng-repeat="event in event">
+  <ion-header-bar>
+    <h1 class="title">{{event.title}}</h1>
+    <div class="buttons">
+      <button class="button button" ng-click="close()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <h2>Description: {{event.description}}</h2>
+    <h3>Location: {{event.location}}</h3>
+    <h3>Start Time: {{event.start}}</h3>
+    <h3>End Time: {{event.end}}</h3>
+    <h3>Price: {{event.price}}</h3>
+    <h3>Ages: {{event.ages}}</h3>
+  </ion-content>
+</ion-modal-view>

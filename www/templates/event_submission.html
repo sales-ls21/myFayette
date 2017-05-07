@@ -22,40 +22,40 @@ GoLocal! reserves the right to edit or remove any submission at its sole discret
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Event Title</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.title">
         </label>  <label class="item item-input">
           <span class="input-label">Hosted By?</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.hosted_by">
         </label>  <label class="item item-input">
           <span class="input-label">Location</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.location">
         </label>  <label class="item item-input">
           <span class="input-label">Cost per Person</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.price">
         </label>  <label class="item item-input">
           <span class="input-label">Age Minimum</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.ages">
         </label>  <label class="item item-input">
           <span class="input-label">Short Description</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.description">
         </label>  <label class="item item-input">
           <span class="input-label">Social Media Link?</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.url">
         </label>  <label class="item item-input">
           <span class="input-label">Contact for more info</span>
-          <input type="text" ng-model="">
+          <input type="text" ng-model="eventObj.contact">
         </label>  <label class="item item-input">
-          <span class="input-label">Start Time</span>
-          <input type="time" ng-model="">
+          <span class="input-label">Start Time (24Hour Clock)</span>
+          <input type="text" ng-model="eventObj.start">
         </label>  <label class="item item-input">
-          <span class="input-label">End Time</span>
-          <input type="time" ng-model="">
+          <span class="input-label">End Time (24Hour Clock)</span>
+          <input type="text" ng-model="eventObj.end">
         </label>  <label class="item item-input">
-          <span class="input-label">Date</span>
-          <input type="date" ng-model="">
+          <span class="input-label">Date (Format YYYY/MM/DD) </span>
+          <input type="text" ng-model="eventObj.date">
         </label> 
         <label class="item">
-          <button class="button button-block button-positive" ng-click="sendEvent()">Add Your Event to the Calendar</button>
+          <button class="button button-block button-positive" ng-click="submit()">Add Your Event to the Calendar</button>
         </label>
       </div>
   </form>

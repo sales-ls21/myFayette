@@ -59,13 +59,12 @@ angular.module('golocal.controllers', [])
   $scope.signup = function(){
 
   }
-})
+}) //Controls Pulling Items from Category group in database
 .factory('Category', function($http){
     var category = {
       list: [],
       companies: []
     };
-
 
     category.getAll = function(){
       return $http({
@@ -93,10 +92,8 @@ angular.module('golocal.controllers', [])
         category.companies = obj;
       });
     }
-
-
   return category;
-})
+}) //Controls Events in Database
 .factory('event', function($http){
   var events = {
     list: []
@@ -111,13 +108,23 @@ angular.module('golocal.controllers', [])
     });
   }
 
+  events.addEvent = function(eventObj){
+    return new Promise((resolve, reject)=>{
+      $http.post(`https://myfayettecounty-c7877.firebaseio.com/events.json`, angular.toJson(eventObj))
+      .then(function(data){
+        resolve(data);  
+      })
+      .catch(function(error){
+        reject(error);
+      });
+    });
+  }
+
   return events;
 })
-
 .controller('HomeCtrl', function($scope) {
  
 })
-
 .controller('ListingCtrl', function($scope, Category) {
     Category.getAll().then(function(data){
       $scope.categories = Category.list;
@@ -145,7 +152,7 @@ angular.module('golocal.controllers', [])
 })
 .controller('FavoritesCtrl', function($scope, $stateParams) {
 })
-.controller('CalendarCtrl', function($scope, event) {
+.controller('CalendarCtrl', function($scope, event, $ionicModal) {
   $scope.eventSources = [{
     events: []
   }];
@@ -159,9 +166,18 @@ angular.module('golocal.controllers', [])
           center: 'title',
           right: 'today prev,next'
         },
-        eventClick: $scope.alertEventOnClick,
-        eventDrop: $scope.alertOnDrop,
-        eventResize: $scope.alertOnResize
+        eventClick: function(event){
+          $ionicModal.fromTemplateUrl('templates/event_info.html', {
+          scope: $scope,
+          }).then(function(modal){
+            $scope.event = [event];
+            $scope.eventmodal = modal;
+            $scope.eventmodal.show();
+          })
+          $scope.close = function(){
+            $scope.eventmodal.hide();
+          }
+        }
       }
     };
   event.getAll().then(function(obj){
@@ -170,7 +186,36 @@ angular.module('golocal.controllers', [])
     })
   });
 })
-.controller('SubmissionCtrl', function($scope, $stateParams) {
+.controller('SubmissionCtrl', function($scope, $stateParams, event, $location) {
+  $scope.eventObj = {
+    title: 'Random',
+    start: '15:00',
+    end:'16:00',
+    location: 'Oakland',
+    hosted_by: 'Oakland Chamber of Commerce',
+    price: 'Free',
+    ages: '18+',
+    contact: 'email@g.com',
+    url: '',
+    description: 'Monthly networking lunch',
+    date: '2017-05-25',
+    editable: false,
+    allDay: false,
+  }
+
+
+//FUNCTION WORKS: NEED TO DEBUG RETRIEVE FUNCTION ON CALENDAR PAGE//
+
+  // $scope.submit = function(){
+  //   $scope.eventObj.start = $scope.eventObj.date + "T" + $scope.eventObj.start
+  //   $scope.eventObj.end = $scope.eventObj.date + "T" + $scope.eventObj.end
+  //   event.addEvent($scope.eventObj)
+  //   .then(function(obj){
+  //     alert("event added");
+  //     window.location.href("#/app/events")
+  //   })
+  // }
+
 })
 .controller('AboutCtrl', function($scope, $stateParams) {
 })
