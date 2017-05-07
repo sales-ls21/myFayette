@@ -1,5 +1,9 @@
 <ion-view view-title="Upcoming Events">
 <ion-content>
 <h1>GoLocal! Events Calendar</h1>
+
+<div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
+
+<a class="button button-block button-positive" href="#/app/submit_event">Add Your Event to the Calendar</a>
 </ion-content>
 </ion-view>

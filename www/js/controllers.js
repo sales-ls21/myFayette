@@ -97,6 +97,22 @@ angular.module('golocal.controllers', [])
 
   return category;
 })
+.factory('event', function($http){
+  var events = {
+    list: []
+  };
+
+  events.getAll = function(){
+    return $http({
+      method: 'GET',
+      url: `https://myfayettecounty-c7877.firebaseio.com/events.json`
+    }).success(function(data){
+        events.list = data;
+    });
+  }
+
+  return events;
+})
 
 .controller('HomeCtrl', function($scope) {
  
@@ -129,7 +145,30 @@ angular.module('golocal.controllers', [])
 })
 .controller('FavoritesCtrl', function($scope, $stateParams) {
 })
-.controller('CalendarCtrl', function($scope, $stateParams) {
+.controller('CalendarCtrl', function($scope, event) {
+  $scope.eventSources = [{
+    events: []
+  }];
+  $scope.events = {};
+      $scope.uiConfig = {
+      calendar:{
+        height: 450,
+        editable: true,
+        header:{
+          left: 'month agendaWeek agendaDay',
+          center: 'title',
+          right: 'today prev,next'
+        },
+        eventClick: $scope.alertEventOnClick,
+        eventDrop: $scope.alertOnDrop,
+        eventResize: $scope.alertOnResize
+      }
+    };
+  event.getAll().then(function(obj){
+    obj.data.forEach(function(i){
+      $scope.eventSources[0].events.push(i); 
+    })
+  });
 })
 .controller('SubmissionCtrl', function($scope, $stateParams) {
 })
