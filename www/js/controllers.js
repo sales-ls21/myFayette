@@ -1,6 +1,6 @@
 angular.module('golocal.controllers', [])
-
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($ionicHistory, $scope, $ionicModal, $timeout, $http) {
+  var currentUser = null;
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -19,25 +19,22 @@ angular.module('golocal.controllers', [])
     $scope.modal = modal;
   });
 
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
-
   // Open the login modal
   $scope.login = function() {
     $scope.modal.show();
   };
-
+  // Triggered in the login modal to close it
+  $scope.closeLogin = function() {
+    $scope.modal.hide();
+  };
   // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
+  $scope.doLogin = function(email, password) {
+    return firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(function(data){
       $scope.closeLogin();
-    }, 1000);
+      currentUser = data.uid;
+      window.location.replace('#/app/favorites')
+    });
   };
 
   $scope.signupData = {};
@@ -48,7 +45,7 @@ angular.module('golocal.controllers', [])
     $scope.signupModal = modal;
   });
 
-    $scope.closeSignUp = function() {
+  $scope.closeSignUp = function() {
     $scope.signupModal.hide();
   };
 
@@ -56,72 +53,121 @@ angular.module('golocal.controllers', [])
     $scope.signupModal.show();
   }
 
-  $scope.signup = function(){
-
-  }
-}) //Controls Pulling Items from Category group in database
-.factory('Category', function($http){
-    var category = {
-      list: [],
-      companies: []
-    };
-
-    category.getAll = function(){
-      return $http({
-        method: 'GET',
-        url: "https://myfayettecounty-c7877.firebaseio.com/categories.json"
-      }).success(function(data){
-        category.list = data;
-      });
+ $scope.signup = function(name, email, password){
+  return firebase.auth().createUserWithEmailAndPassword(email, password).
+  then(function(data){
+    $scope.closeSignUp();
+    currentUser = data.uid;
+    userObj = {
+      name: name,
+      uid: currentUser
     }
-
-    category.getCompanyByCategory = function(params){
-      return $http({
-        method: 'GET',
-        url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="category"&equalTo="${params}"`
-      }).success(function(data){
-        category.companies = data;
-      });
-    }
-
-    category.getCompanyByName = function(params){
-      return $http({
-        method: 'GET',
-        url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="name"&equalTo="${params}"`
-      }).success(function(obj){
-        category.companies = obj;
-      });
-    }
-  return category;
-}) //Controls Events in Database
-.factory('event', function($http){
-  var events = {
-    list: []
-  };
-
-  events.getAll = function(){
     return $http({
-      method: 'GET',
-      url: `https://myfayettecounty-c7877.firebaseio.com/events.json`
+      method: 'POST',
+      url: "https://myfayettecounty-c7877.firebaseio.com/users.json",
+      data: userObj
     }).success(function(data){
-        events.list = data;
-    });
-  }
+      window.location.replace('#/app/favorites')
+      // $state.go('app.favorites')
+    })
+  })
+ };
 
-  events.addEvent = function(eventObj){
-    return new Promise((resolve, reject)=>{
-      $http.post(`https://myfayettecounty-c7877.firebaseio.com/events.json`, angular.toJson(eventObj))
-      .then(function(data){
-        resolve(data);  
+ $scope.logout = function(){
+      firebase.auth().signOut().then(function(data){
+      $ionicHistory.clearHistory();
+      $ionicHistory.clearCache();
+      currentUser = null;
+      window.location.replace('#/app/home')
       })
-      .catch(function(error){
-        reject(error);
-      });
-    });
-  }
-
-  return events;
+ }
+  
 })
+// .factory('Auth', function(){
+
+//    var isAuthenticated = function(){
+//     return new Promise((resolve, reject) =>{
+//       firebase.auth().onAuthStateChanged((user)=>{
+//         if (user){
+//           console.log("who is it?", user.uid);
+//           currentUser = user.uid;
+//           resolve(true);
+//         } else{
+//           console.log("not logged in");
+//           resolve(false);
+//         }
+//       });
+//     });
+//   };
+
+//   var getUser = function(){
+//     return currentUser;
+//   };
+
+//   return {isAuthenticated, getUser};
+// }) //Controls Pulling Items from Category group in database
+// .factory('Category', function($http){
+//     var category = {
+//       list: [],
+//       companies: []
+//     };
+
+//     category.getAll = function(){
+//       return $http({
+//         method: 'GET',
+//         url: "https://myfayettecounty-c7877.firebaseio.com/categories.json"
+//       }).success(function(data){
+//         category.list = data;
+//       });
+//     }
+
+//     category.getCompanyByCategory = function(params){
+//       return $http({
+//         method: 'GET',
+//         url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="category"&equalTo="${params}"`
+//       }).success(function(data){
+//         category.companies = data;
+//       });
+//     }
+
+//     category.getCompanyByName = function(params){
+//       return $http({
+//         method: 'GET',
+//         url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="name"&equalTo="${params}"`
+//       }).success(function(obj){
+//         category.companies = obj;
+//       });
+//     }
+//   return category;
+// }) //Controls Events in Database
+// .factory('event', function($http){
+//   var events = {
+//     list: []
+//   };
+
+//   events.getAll = function(){
+//     return $http({
+//       method: 'GET',
+//       url: `https://myfayettecounty-c7877.firebaseio.com/events.json`
+//     }).success(function(data){
+//         events.list = data;
+//     });
+//   }
+
+//   events.addEvent = function(eventObj){
+//     return new Promise((resolve, reject)=>{
+//       $http.post(`https://myfayettecounty-c7877.firebaseio.com/events.json`, angular.toJson(eventObj))
+//       .then(function(data){
+//         resolve(data);  
+//       })
+//       .catch(function(error){
+//         reject(error);
+//       });
+//     });
+//   }
+
+//   return events;
+// })
 .controller('HomeCtrl', function($scope) {
  
 })
@@ -147,6 +193,9 @@ angular.module('golocal.controllers', [])
     }
   });
 
+  $scope.getMap = function(){
+
+  }
 })
 .controller('AccountCtrl', function($scope, $stateParams) {
 })
@@ -176,6 +225,9 @@ angular.module('golocal.controllers', [])
           })
           $scope.close = function(){
             $scope.eventmodal.hide();
+          }
+          $scope.favorite = function(){
+            //ADD EVENT HANDLER HERE
           }
         }
       }
@@ -224,5 +276,5 @@ angular.module('golocal.controllers', [])
 })
 .controller('AdvertiseCtrl', function($scope, $stateParams) {
 })
-.controller('MapCtrl', function($scope, $stateParams) {
+.controller('MapCtrl', function($scope, $stateParams, ConfigGoogle) {
 });

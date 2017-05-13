@@ -23,7 +23,7 @@
       <a href-inappbrowser="{{company.facebook}}" id="companyDetails-button5" class="button button-positive  button-block icon ion-social-facebook"> Facebook</a>
       <a href-inappbrowser="{{company.twitter}}" id="companyDetails-button6" class="button button-calm  button-block icon ion-social-twitter"> Twitter</a>
       <a href-inappbrowser="{{company.website}}"id="companyDetails-button7" class="button button-assertive  button-block icon ion-wifi"> Website</a>
-      <a href-inappbrowser="googlemaps" id="companyDetails-button8" class="button button-dark  button-block icon ion-navigate"> Get Directions</a>
+      <button ng-click="getMap()" id="{{company.address}}" class="button button-dark  button-block icon ion-navigate"> Get Directions</button>
     </div>
     <button id="companyDetails-button12" class="button button-assertive  button-block icon ion-heart"> Add to Favorites</button>
   </ion-content>
