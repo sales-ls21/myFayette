@@ -184,7 +184,7 @@ angular.module('golocal.controllers', [])
       $scope.companies = obj.data;
     });
 })
-.controller('CompaniesCtrl', function($scope, $stateParams, Category) {
+.controller('CompaniesCtrl', function($scope, $stateParams, Category, Auth, $location) {
   $scope.title = $stateParams.company;
   Category.getCompanyByName($stateParams.company)
   .then(function(obj){
@@ -193,8 +193,23 @@ angular.module('golocal.controllers', [])
     }
   });
 
-  $scope.getMap = function(){
-
+  $scope.saveToFav = function(){
+    let data = null;
+    Auth.isAuthenticated().then(function(data){
+      if(!data){
+        alert('You must be logged in to add favorites.');
+      } else{
+        data = data;
+        Category.getCompanyByName($stateParams.company)
+        .then(function(obj){
+          var name = obj.data[0].name;
+          Category.Favorite(data, name)
+          .then(function(item){
+            alert("Added to Favorites.");
+          });
+        });
+      }
+    })
   }
 })
 .controller('AccountCtrl', function($scope, $stateParams) {
