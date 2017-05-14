@@ -1,5 +1,9 @@
 <ion-view view-title="Favorited Locations">
 <ion-content>
 <h1>My GoLocal! Favorites</h1>
+
+ <ion-item-group ng-repeat = "item in favorites">
+    <ion-item href="#/app/{{item.business}}">{{item.business}}</ion-item>
+ </ion-item-group>
 </ion-content>
 </ion-view>

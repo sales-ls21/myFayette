@@ -202,7 +202,10 @@ angular.module('golocal.controllers', [])
         data = data;
         Category.getCompanyByName($stateParams.company)
         .then(function(obj){
-          var name = obj.data[0].name;
+          for(var prop in obj.data){
+            obj.data = obj.data[prop]
+          }
+          var name = obj.data.name;
           Category.Favorite(data, name)
           .then(function(item){
             alert("Added to Favorites.");
@@ -214,7 +217,22 @@ angular.module('golocal.controllers', [])
 })
 .controller('AccountCtrl', function($scope, $stateParams) {
 })
-.controller('FavoritesCtrl', function($scope, $stateParams) {
+.controller('FavoritesCtrl', function($scope, $stateParams, Favorites, Auth) {
+
+   $scope.$on('$ionicView.enter', function(e) {
+      let user = null;
+      Auth.isAuthenticated().then(function(data){
+        if(!data){
+            alert('You must be logged in to see favorites.');
+          } else {
+            user = data;
+            Favorites.getByUser(user)
+            .then(function(result){
+              $scope.favorites = Favorites.list;
+            })
+          }
+      }) 
+  });
 })
 .controller('CalendarCtrl', function($scope, event, $ionicModal) {
   $scope.eventSources = [{

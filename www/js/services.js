@@ -5,11 +5,9 @@ angular.module('golocal.services', [])
     return new Promise((resolve, reject) =>{
       firebase.auth().onAuthStateChanged((user)=>{
         if (user){
-          console.log("who is it?", user.uid);
           currentUser = user.uid;
           resolve(currentUser);
         } else{
-          console.log("not logged in");
           resolve(false);
         }
       });
@@ -59,8 +57,7 @@ angular.module('golocal.services', [])
     	return new Promise((resolve, reject)=>{
     		$http.get(`https://myfayettecounty-c7877.firebaseio.com/users.json?orderBy="uid"&equalTo="${id}"`)
     		.then(function(obj){
-    			let user = Object.keys(obj.data);
-    			user = user[0]
+    			let user = id;
     			let favObj = {
     				uid: user,
     				business: name,
@@ -106,5 +103,20 @@ angular.module('golocal.services', [])
   }
 
   return events;
+})
+.factory('Favorites', function($http){
+	var favorites = {
+		list: []
+	}
+
+	favorites.getByUser = function(uid){
+		return $http({
+	      method: 'GET',
+	      url: `https://myfayettecounty-c7877.firebaseio.com/favorites.json?orderBy="uid"&equalTo="${uid}"`
+	    }).success(function(data){
+	        favorites.list = data;
+	    });
+	}
+	return favorites;
 })
 
