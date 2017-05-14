@@ -223,6 +223,7 @@ angular.module('golocal.controllers', [])
       let user = null;
       Auth.isAuthenticated().then(function(data){
         if(!data){
+            window.location.replace("#/app/home");
             alert('You must be logged in to see favorites.');
           } else {
             user = data;
