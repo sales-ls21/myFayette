@@ -130,7 +130,7 @@ var app = angular.module('golocal', ['ionic', 'golocal.controllers', 'ui.calenda
         controller: 'DetailsCtrl'
       }
     }
-  })  
+  })     
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');
 });

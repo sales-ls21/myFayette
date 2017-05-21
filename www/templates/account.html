@@ -1,5 +1,11 @@
 <ion-view view-title="My Account">
 <ion-content>
 <h1>My GoLocal! Account</h1>
+<h2>{{accountDetails.message}}</h2>
+<div ng-repeat="detail in accountDetails">
+	<h3>Name: {{detail.name}}</h3>
+</div>
+<button class="button button-block button-positive" ng-click="editDetails()">Edit Details</button>
+<button class="button button-block button-assertive" ng-click="delete()">Delete Account</button>
 </ion-content>
 </ion-view>

@@ -119,4 +119,36 @@ angular.module('golocal.services', [])
 	}
 	return favorites;
 })
+.factory('User', function($http){
+	var user = [];
+
+	user.getUserDetails = function(uid){
+		return $http({
+			method: 'GET',
+			url: `https://myfayettecounty-c7877.firebaseio.com/users.json?orderBy="uid"&equalTo="${uid}"`
+		}).success(function(data){
+			user.push(data);
+		});
+	}
+
+	user.deleteAccount = function(uid){
+		return $http({
+			method: 'DELETE',
+			url: `https://myfayettecounty-c7877.firebaseio.com/users.json?orderBy="uid"&equalTo="${uid}"`
+		}).success(function(data){
+
+		})
+	}
+
+	user.editDetails = function(uid, dataObj){
+		return $http({
+			method: 'PATCH',
+			url: `https://myfayettecounty-c7877.firebaseio.com/users.json?orderBy="uid"&equalTo="${uid}"`,
+			data: dataObj
+		}).success(function(data){
+			user.push(data);
+		})
+	}
+	return user;
+})
 

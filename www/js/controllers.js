@@ -83,91 +83,6 @@ angular.module('golocal.controllers', [])
  }
   
 })
-// .factory('Auth', function(){
-
-//    var isAuthenticated = function(){
-//     return new Promise((resolve, reject) =>{
-//       firebase.auth().onAuthStateChanged((user)=>{
-//         if (user){
-//           console.log("who is it?", user.uid);
-//           currentUser = user.uid;
-//           resolve(true);
-//         } else{
-//           console.log("not logged in");
-//           resolve(false);
-//         }
-//       });
-//     });
-//   };
-
-//   var getUser = function(){
-//     return currentUser;
-//   };
-
-//   return {isAuthenticated, getUser};
-// }) //Controls Pulling Items from Category group in database
-// .factory('Category', function($http){
-//     var category = {
-//       list: [],
-//       companies: []
-//     };
-
-//     category.getAll = function(){
-//       return $http({
-//         method: 'GET',
-//         url: "https://myfayettecounty-c7877.firebaseio.com/categories.json"
-//       }).success(function(data){
-//         category.list = data;
-//       });
-//     }
-
-//     category.getCompanyByCategory = function(params){
-//       return $http({
-//         method: 'GET',
-//         url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="category"&equalTo="${params}"`
-//       }).success(function(data){
-//         category.companies = data;
-//       });
-//     }
-
-//     category.getCompanyByName = function(params){
-//       return $http({
-//         method: 'GET',
-//         url: `https://myfayettecounty-c7877.firebaseio.com/companies.json?orderBy="name"&equalTo="${params}"`
-//       }).success(function(obj){
-//         category.companies = obj;
-//       });
-//     }
-//   return category;
-// }) //Controls Events in Database
-// .factory('event', function($http){
-//   var events = {
-//     list: []
-//   };
-
-//   events.getAll = function(){
-//     return $http({
-//       method: 'GET',
-//       url: `https://myfayettecounty-c7877.firebaseio.com/events.json`
-//     }).success(function(data){
-//         events.list = data;
-//     });
-//   }
-
-//   events.addEvent = function(eventObj){
-//     return new Promise((resolve, reject)=>{
-//       $http.post(`https://myfayettecounty-c7877.firebaseio.com/events.json`, angular.toJson(eventObj))
-//       .then(function(data){
-//         resolve(data);  
-//       })
-//       .catch(function(error){
-//         reject(error);
-//       });
-//     });
-//   }
-
-//   return events;
-// })
 .controller('HomeCtrl', function($scope) {
  
 })
@@ -215,7 +130,43 @@ angular.module('golocal.controllers', [])
     })
   }
 })
-.controller('AccountCtrl', function($scope, $stateParams) {
+.controller('AccountCtrl', function($scope, $stateParams, Auth, User, $location) {
+  let user = null;
+  $scope.accountDetails = {};
+  Auth.isAuthenticated().then(function(data){
+    if(!data){
+      $scope.accountDetails.message = "In order to view account details, you must be logged in."
+    } else {
+      user = data;
+      User.getUserDetails(user).then(function(obj){
+        $scope.accountDetails = obj.data;
+      })
+    }
+  })
+
+  $scope.edited = {
+    name: null
+  }
+
+  $scope.editDetails = function(){
+    Auth.getUser().then(function(data){
+      User.editDetails(data, $scope.edited).then(function(data){
+        alert("Account updated.");
+        window.location.replace('#/app/account');
+      })
+    })
+  }
+
+  $scope.delete = function(){
+    Auth.getUser().then(function(data){
+      User.deleteAccount(data)
+      .then(function(obj){
+        alert("Your account has been successfully deleted.");
+        $location.url('/home');
+      })
+    })
+  }
+
 })
 .controller('FavoritesCtrl', function($scope, $stateParams, Favorites, Auth) {
 
@@ -235,7 +186,7 @@ angular.module('golocal.controllers', [])
       }) 
   });
 })
-.controller('CalendarCtrl', function($scope, event, $ionicModal) {
+.controller('CalendarCtrl', function($scope, event, $ionicModal, Auth, $location) {
   $scope.eventSources = [{
     events: []
   }];
@@ -270,41 +221,56 @@ angular.module('golocal.controllers', [])
     for(prop in obj.data){
       $scope.eventSources[0].events.push(obj.data[prop])
     }
-    // obj.data.forEach(function(i){
-    //   $scope.eventSources[0].events.push(i); 
-    // })
   });
-})
-.controller('SubmissionCtrl', function($scope, $stateParams, event, $location) {
-  $scope.eventObj = {
-    title: 'Random',
-    start: '15:00',
-    end:'16:00',
-    location: 'Oakland',
-    hosted_by: 'Oakland Chamber of Commerce',
-    price: 'Free',
-    ages: '18+',
-    contact: 'email@g.com',
-    url: '',
-    description: 'Monthly networking lunch',
-    date: '2017-05-25',
-    editable: false,
-    allDay: false,
+
+  $scope.checkUser = function(){
+    Auth.isAuthenticated().then(function(data){
+      if(!data){
+        alert('Please log in to add your event.');
+        $location.url('/home');
+      } else {
+        $location.url('/submit_event')
+      }
+    })
   }
-
-
-//FUNCTION WORKS: NEED TO DEBUG RETRIEVE FUNCTION ON CALENDAR PAGE//
-
+})
+.controller('SubmissionCtrl', function($scope, $stateParams, event, $location, Auth) {
+    $scope.eventObj = {
+      title: 'Random',
+      start: '15:00',
+      end:'16:00',
+      location: 'Oakland',
+      hosted_by: 'Oakland Chamber of Commerce',
+      price: 'Free',
+      ages: '18+',
+      contact: 'email@g.com',
+      url: '',
+      description: 'Monthly networking lunch',
+      date: '2017-05-25',
+      editable: false,
+      allDay: false,
+      user: null
+    }
+   $scope.$on('$ionicView.enter', function(e) {
+      let user = null;
+      Auth.isAuthenticated().then(function(data){
+        if(!data){
+            alert('You must be logged in order to submit an event to the calendar.');
+            $location.url("/home");
+          } else {
+            $scope.eventObj.user = data;
+          }
+      }) 
+  });
   $scope.submit = function(){
     $scope.eventObj.start = $scope.eventObj.date + "T" + $scope.eventObj.start
     $scope.eventObj.end = $scope.eventObj.date + "T" + $scope.eventObj.end
     event.addEvent($scope.eventObj)
     .then(function(obj){
       alert("event added");
-      window.location.replace("#/app/events")
+      $location.url("/events")
     })
   }
-
 })
 .controller('AboutCtrl', function($scope, $stateParams) {
 })
